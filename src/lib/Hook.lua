@@ -95,7 +95,8 @@ end
 function Hook:HookFunction(Func: UnkFunc, Callback: UnkFunc)
 	local OriginalFunc
 	local WrappedCallback = newcclosure(Callback)
-	OriginalFunc = clonefunction(hookfunction(Func, function(...)
+    local HookFunc = (iscclosure(Func) and oth and oth.hook or hookfunction)
+    OriginalFunc = clonefunction(HookFunc(Func, function(...)
 		return HookMiddle(OriginalFunc, WrappedCallback, false, ...)
 	end))
 	return OriginalFunc
@@ -424,3 +425,4 @@ function Hook:LoadHooks(ActorCode: string, ChannelId: number)
 end
 
 return Hook
+
